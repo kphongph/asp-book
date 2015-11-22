@@ -1,0 +1,96 @@
+\documentclass[12pt]{book}
+
+%= Set Thai Language ==================================
+%= ใช้ XeLaTeX
+
+\usepackage[vcentering,dvips]{geometry}
+\usepackage{subfigure}
+\usepackage{pst-all}
+\usepackage{xltxtra}
+\usepackage{xunicode}
+\usepackage{amsmath}
+\usepackage[nounderscore]{syntax}
+\usepackage{amsthm}
+\usepackage{graphicx}
+%\usepackage{xfrac}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+%
+%\usepackage{unicode-math}
+\usepackage{fontspec}
+%\usepackage{mathspec}
+%\renewcommand{lmr}{\fontfamily{lmr}\selectfont}
+
+\usepackage{makeidx}
+
+\geometry{papersize={7in,9in},total={4.8in,6.8in}}
+
+\XeTeXlinebreaklocale “th_TH” % สำหรับตัดคำ
+\XeTeXlinebreakskip = 0pt plus 1pt %
+\renewcommand{\baselinestretch}{1.2} % ตั้งระยะห่างระหว่างบรรทัด
+\defaultfontfeatures{Scale=1.23}
+
+
+%\newfontfamily{\thaifont}[Script=Thai]{TH Sarabun New:script=thai}
+
+\setromanfont[
+BoldFont=THSarabun_Bold.ttf,
+ItalicFont=THSarabun_Italic.ttf,
+BoldItalicFont=THSarabun_Bold_Italic.ttf,
+]{THSarabun.ttf}
+
+%\setmathrm{Latin Modern Roman}
+
+\newcommand{\lmr}{\fontfamily{lmr}\selectfont} % Latin Modern Roman
+\newcommand{\lmss}{\fontfamily{lmss}\selectfont} % Latin Modern Sans
+%\newcommand{\lmss}{\fontfamily{lmtt}\selectfont} % Latin Modern Mono
+%\setmainfont[Script=Thai]{THSarabun.ttf}
+
+\theoremstyle{definition}
+\newtheorem{defn}{นิยาม}[chapter]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+
+\renewcommand{\figurename}{รูปที่}
+\renewcommand{\chaptername}{บทที่}
+
+\newcounter{examplecounter}
+\newenvironment{example}{%
+  \bigskip\noindent
+  \refstepcounter{examplecounter}%
+  \textbf{ตัวอย่างปัญหา \theexamplecounter}% 
+}{%
+  \par\bigskip
+}
+\numberwithin{examplecounter}{chapter}
+
+\title{Declarative Programing with Answer Set}
+% Include Author name and Copyright holder name
+\author{ผู้ช่วยศาสตราจารย์ ดร.พงศ์พันธ์ กิจสนาโยธิน}
+
+\makeindex
+% =====================================================
+
+\begin{document}
+
+
+%\frontmatter
+%\maketitle
+%\mainmatter
+
+
+\input{introduction}
+\input{basic_modeling}
+%\input{preliminaries_functions}
+%\input{computer_language}
+%\input{imp}
+%\input{operational_semantics}
+%\input{pda_cfg}
+%\input{np_completeness}
+%\input{steiner_tree}
+
+\bibliographystyle{apalike}
+\bibliography{ref}
+\printindex
+
+\end{document}

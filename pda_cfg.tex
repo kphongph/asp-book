@@ -1,0 +1,457 @@
+\chapter{ทดสอบ}
+\par{
+กำหนดให้ $M = (\{q_0, q_1\}, \{0, 1\}, \{X, Z_0\}, \delta, q_0, Z_0, \emptyset)$ โดยที่ $\delta$ อธิบายดัวต่อไปนี้
+\begin{eqnarray*}
+\delta(q_0, 0, Z_0) & = & \{(q_0, XZ_0)\} \\
+\delta(q_0, 0, X) & = & \{(q_0, XX)\} \\
+\delta(q_0, 1, X) & = & \{(q_1, \epsilon)\} \\
+\delta(q_1, 1, X) & = & \{(q_1, \epsilon)\} \\
+\delta(q_1, \epsilon, X) & = & \{(q_1, \epsilon)\} \\
+\delta(q_1, \epsilon, Z_0) & = & \{(q_1, \epsilon)\} \\
+\end{eqnarray*}
+}
+
+\par{
+เริ่มต้นเรากำหนดให้ CFG $G = \{V, T, P, S\}$ (โดยที่ S เป็นตัว non-terminal ตัวแรกของ CFG $G$) ฉะนั้น $V$ จะเป็นเซตดังต่อไปนี้
+
+\begin{eqnarray*}
+V & = & \{S , \\
+&  & [q_0, X, q_0], [q_0, X, q_1], [q_1, X, q_0], [q_1, X, q_1], \\ 
+&  & [q_0, Z_0, q_0], [q_0, Z_0, q_1], [q_1, Z_0, q_0], [q_1, Z_0, q_1] \}
+\end{eqnarray*}
+
+เราจะเริ่มต้นที่ $S$ ซึ่งจะเกิดขึ้นจาก state ตั้งต้นของ PDA คือ $q_0$ โดยที่ ค่าบนสุดของ Stack คือ $Z_0$ $(\{q_0, q_1\}, \{0, 1\}, \{X, Z_0\}, \delta, q_0, Z_0, \emptyset)$
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+S & \rightarrow & [q_0,Z_0, q_1] 
+\end{eqnarray*}
+}
+
+\par{
+เราไม่รู้ว่าเมื่อ pop $Z_0$ จาก Stack แล้วจะไปหยุดที่ state ไหน เลยจำเป็นต้องใช้ ทั้ง $[q_0, Z_0, q_0]$ และ $[q_0, Z_0, q_1]$ เราจะเริ่มพิจารณาจาก $[q_0,Z_0, q_0]$
+}
+
+\par{
+จาก $[q_0,Z_0, q_0]$ เราทราบว่า การทำงานของ PDA จะเริ่มที่ $q_0$ โดยที่ ค่าบนสุดของ Stack คือ $Z_0$ และ เมื่อ $Z_0$ ถูก $pop$ ออกจาก Stack PDA จะไปอยู่ที่ $q_0$ ฉะนั้น จาก $\delta$ ของ PDA เราจะหาการทำงานที่เริ่มจาก $q_0$ และมีค่าบนสุดของ Stack คือ $Z_0$ ซึ่งมีแค่ตัวเดี่ยวคือ $\delta(q_0, 0, Z_0) = \{(q_0, XZ_0)\}$
+}
+
+\par{
+จากการรูปแบบการทำงานของ PDA $\delta(q_0, 0, Z_0) = \{(q_0, XZ_0)\}$ จะถูกใช้ทำงานเมือมีค่าของ input เป็น 0 ณ $q_0$ โดยค่าบนของ Stack คือ $Z_0$ โดยการทำงานจะเปลี่ยนสถานะเป็น $q_0$ พร้อมทั้งเปลี่ยนค่าบนสุดของ Stack เป็น $XZ_0$ แทน ฉะนั้นเราสามารถอธิบายได้เป็นโครงสร้าง $[qZp]$ ดังต่อไปนี้
+
+\begin{eqnarray*}
+[\color{blue}{q_0}, \color{green}{Z_0} \color{black}{, q_0] \rightarrow} \color{red}{0} [  \color{orange}{q_0}
+\end{eqnarray*}
+}
+
+\par{
+ณ state $\color{blue}{q_0}$ และ ค่าบนสุดของ Stack คือ $\color{green}{Z_0}$ ถ้ามี input เป็น  $\color{red}{0}$ จะมีการเปลี่ยน state เป็น $\color{orange}{q_0}$ เนื่องจากการทำงาน PDA ที่คำนึงถึงอยู่ มีการ push $XZ_0$ เข้าไปใน Stack ฉะนั้น
+
+\begin{eqnarray*}
+[\color{blue}{q_0}, \color{green}{Z_0}, \color{purple}{q_0}] \rightarrow \color{red}{0} [\color{orange}{q_0}\color{black}{, X, q_x][q_x,Z_0,} \color{purple}{q_0}]
+\end{eqnarray*}
+
+โดยที่ $q_x$ เป็น state ใด ๆ ใน PDA เนื่องจาก เราไม่รู้ว่า หลังจากที่ $X$ ถูก pop ออกจาก Stack แล้ว การทำงานของ PDA อยู่ที่ state ไหน ฉะนั้นเราจะได้ CFG production rules ดังต่อไปนี้
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_0] \\
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1]
+\end{eqnarray*}
+}
+
+\par{
+จาก production rule ข้างต้น จะเกิด non-terminal ตัวใหม่สี่ตัวคือ $[ q_0, X, q_0]$
+, $[ q_0, X, q_1]$, $[q_1, Z_0, q_0]$ และ $[q_1, Z_0, q_1]$ 
+เราจะพิจารณาต่อจาก non-terminal ตัวใหม่เหล่านี้ โดยเริ่มจาก $[q_0, X, q_x]$ ซึ่งจะต้องพิจารณาจาก transition ของ PDA ณ state $q_0$ และ มี $X$ เป็นค่าของจุดสูงสุดของ Stack ซึ่งมีอยู่ด้วยกัน Transition คือ $\delta(q_0, 0, X) = \{(q_0, XX)\}$ และ $\delta(q_0, 1, X) = \{(q_1, \epsilon)\}$
+}
+
+\par{
+จาก $\delta(q_0, 0, X) = \{(q_0, XX)\}$ เราจะได้
+
+\begin{eqnarray*}
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1]\\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1]
+\end{eqnarray*}
+}
+
+\par{
+จาก $\delta(q_0, 1, X) = \{(q_1, \epsilon)\}$ เราจะได้
+
+\begin{eqnarray*}
+\left[q_0, X, q_1\right] \rightarrow 1
+\end{eqnarray*}
+}
+
+\par{
+เราจะพิจารณาตัว non-terminal ที่เหลือต่อ ($[q_1, Z_0, q_0]$ และ $[q_1, Z_0, q_1]$) ซึ่งทั้งคู่เป็นกรณีที่ PDA อยู่ ณ state $q_1$ มี ค่าบน Stack คือ $Z_0$
+}
+
+\par{
+จาก $\delta(q_1, \epsilon, Z_0) = \{(q_1, \epsilon)\}$ เราจะได้
+
+\begin{eqnarray*}
+\left[q_1, Z_0, q_1\right] \rightarrow \epsilon
+\end{eqnarray*}
+
+ในกรณีของ $[q_1, Z_0, q_0]$ เราไม่สามารถหา Transition ของ PDA มาอธิบายได้ ฉะนั้น $[q_1, Z_0, q_0]$ จะไม่ปรากฎบน production rules ของ CFG แต่เพื่อความสะดวกในการพิจารณาเพื่อตัดออกเราจึงขอใช้ production สมมุติ ดังต่อไปนี้ $[q_1, Z_0, q_0] \rightarrow \emptyset$ แทน production ที่ไม่เกิดขึ้นแทน 
+}
+
+\par{
+สรุป production rules ของเราในขณะนี้จะแสดงได้ดังต่อไปนี้
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right]& \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\left[q_0, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, Z_0, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, Z_0, q_0\right] & \rightarrow & \emptyset
+\end{eqnarray*}
+}
+
+\par{
+เนื่องจาก $[q_1, Z_0, q_0] \rightarrow \emptyset$ เราจึงตัด
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right]& \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+\color{red}{\left[q_0, Z_0, q_0\right]} & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\left[q_0, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, Z_0, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, Z_0, q_0\right] & \rightarrow & \emptyset
+\end{eqnarray*}
+
+ฉะนั้นเราจะเหลือเพียง
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\left[q_0, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, Z_0, q_1\right] & \rightarrow & \epsilon 
+\end{eqnarray*}
+}
+
+\par{
+จากข้างต้นยังมี ตัว non-terminal ที่เราต้องหาเพิ่มเติมอีกสองตัวคือ $[q_1, X, q_0]$ และ $[q_1, X, q_1]$
+}
+
+\par{
+จาก
+
+\begin{eqnarray*}
+\delta(q_1, 1, X) & = & \{(q_1, \epsilon)\} \\
+\delta(q_1, \epsilon, X) & = & \{(q_1, \epsilon)\}
+\end{eqnarray*}
+
+เราจะได้
+
+\begin{eqnarray*}
+\left[q_1, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, X, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, X, q_0\right] & \rightarrow & \emptyset \\
+\end{eqnarray*}
+}
+
+\par{
+เพิ่ม production rules ใหม่นี้เข้าไปจะได้
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\left[q_0, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, Z_0, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, X, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, X, q_0\right] & \rightarrow & \emptyset 
+\end{eqnarray*}
+
+เนื่องจาก $[q_1, X, q_0] \rightarrow \emptyset$ เราจะต้องตัด
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_1]\color{red}{[q_1, X, q_0]} \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\left[q_0, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, Z_0, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, X, q_1\right] & \rightarrow & \epsilon
+\end{eqnarray*}
+
+เราจะได้
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\left[q_0, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, Z_0, q_1\right] & \rightarrow & \epsilon \\
+\left[q_1, X, q_1\right] & \rightarrow & 1 \\
+\left[q_1, X, q_1\right] & \rightarrow & \epsilon
+\end{eqnarray*}
+}
+
+\par{
+เราจะเร่ิมพิจารณา production ที่ไม่สามารถทำให้เกิด terminal ขึ้นได้โดยเริ่มจาก ทำเครื่องหมายตัวที่ทำให้เกิด terminal ก่อน ดังต่อไปนี้
+}
+
+\par{
+เริ่มต้นจาก การเปลี่ยนเป็น terminal ได้โดยตรง
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_1][q_1, Z_0, q_1] \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_1] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_1][q_1, X, q_1] \\
+%
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, Z_0, q_1\right]} & \rightarrow & \epsilon \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & \epsilon
+\end{eqnarray*}
+}
+
+\par{
+จากนั้นทำเครื่องหมายต่อใน production ต่าง ๆ ที่มีตัวที่ถูกทำเครื่องหมายแล้วดังต่อไปนี้
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 \color{blue}{[ q_0, X, q_1]}\color{blue}{[q_1, Z_0, q_1]} \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0]\color{blue}{[q_0, X, q_1]} \\
+\left[q_0, X, q_1\right] & \rightarrow & 0\color{blue}{[q_0, X, q_1]}\color{blue}{[q_1, X, q_1]} \\
+%
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, Z_0, q_1\right]} & \rightarrow & \epsilon \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & \epsilon
+\end{eqnarray*}
+}
+
+\par{
+ถ้า non-terminal ทุกตัวทางด้านขวามือของ production rule สามารถเปลี่ยนเป็น terminal ได้ทั้งหมดแสดงว่า ด้านซ้ายมือของ production rule สามารถสร้าง terminal ขึ้นได้ ฉะนั้น
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+S & \rightarrow & [q_0,Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_1] \\
+\color{red}{\left[q_0, Z_0, q_1\right]} & \rightarrow & 0 \color{blue}{[ q_0, X, q_1]}\color{blue}{[q_1, Z_0, q_1]} \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0]\color{blue}{[q_0, X, q_1]} \\
+\color{red}{\left[q_0, X, q_1\right]} & \rightarrow & 0\color{blue}{[q_0, X, q_1]}\color{blue}{[q_1, X, q_1]} \\
+%
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, Z_0, q_1\right]} & \rightarrow & \epsilon \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & \epsilon 
+\end{eqnarray*}
+}
+
+\par{
+ทำกระบวนการข้างต้นจนกว่าจะไม่มีการทำเครื่องหมายเพิ่มเติมจึงจะหยุด เราจะได้ production rule ที่มีการทำเครื่องหมายแล้วดังต่อไปนี้
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0,Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 0 [ q_0, X, q_0][q_0, Z_0, q_0] \\
+%
+\color{blue}{S} & \rightarrow & \color{blue}{[q_0,Z_0, q_1]} \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 0 [ q_0, X, q_0]\color{blue}{[q_0, Z_0, q_1]} \\
+\color{blue}{\left[q_0, Z_0, q_1\right]} & \rightarrow & 0 \color{blue}{[ q_0, X, q_1]}\color{blue}{[q_1, Z_0, q_1]} \\
+%
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_0, X, q_0]\color{blue}{[q_0, X, q_1]} \\
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 0\color{blue}{[q_0, X, q_1]}\color{blue}{[q_1, X, q_1]} \\
+%
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, Z_0, q_1\right]} & \rightarrow & \epsilon \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & \epsilon 
+\end{eqnarray*}
+}
+
+\par{
+จาก production rules ที่ทำเครื่องหมายไว้แล้ว เราจะตัด production rules ทั้งหมดที่ตัวด้านซ้ายของ production rule ไม่ถูกทำเครื่องหมายไว้ เนื่องจาก production เหล่านั้นไม่สามารถทำให้เกิด terminal ขึ้นมาได้ ฉะนั้นเราจะได้ production rules ทั้งหมดดังต่อไปนี้
+
+\begin{eqnarray*}
+\color{blue}{S} & \rightarrow & \color{blue}{[q_0,Z_0, q_1]} \\
+\color{blue}{\left[q_0, Z_0, q_1\right]} & \rightarrow & 0 \color{blue}{[ q_0, X, q_1]}\color{blue}{[q_1, Z_0, q_1]} \\
+%
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 0\color{blue}{[q_0, X, q_1]}\color{blue}{[q_1, X, q_1]} \\
+%
+\color{blue}{\left[q_0, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, Z_0, q_1\right]} & \rightarrow & \epsilon \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & 1 \\
+\color{blue}{\left[q_1, X, q_1\right]} & \rightarrow & \epsilon \\
+\end{eqnarray*}
+}
+
+\par{
+ตัวอย่างข้อต่อมา กำหนดให้ CFG $G_1$ ดังต่อไปนี้ 
+
+\begin{eqnarray*}
+S & \rightarrow & aAA \\
+A & \rightarrow & aS|bS|a 
+\end{eqnarray*}
+
+ให้สร้าง PDA ที่มีการทำงานเหมือนกันกับ CFG $G_1$
+}
+
+\par{
+เราสามารถสร้าง PDA $M = (\{q_0, q_1\},\{a, b\}, \{a, b, A, S, Z_0\}, \delta, q_0,  Z_0, \emptyset)$
+
+โดยที่มี $\delta$ ดังต่อไปนี้ 
+
+\begin{eqnarray*}
+\delta(q_0, \epsilon, Z_0) & = & \{(q_1, SZ_0)\} \\
+\delta(q_1, \epsilon, S) & = & \{(q_1, aAA)\} \\
+\delta(q_1, \epsilon, A) & = & \{(q_1, aS), (q_1, bS), (q_1, a)\} \\
+\delta(q_1, a, a) & = & \{(q_1, \epsilon)\} \\ 
+\delta(q_1, b, b) & = & \{(q_1, \epsilon)\} \\
+\delta(q_1, \epsilon, Z_0) & = & \{(q_1, \epsilon)\}
+\end{eqnarray*}
+}
+
+
+
+\par{
+Given a grammar for the language recognized by $M=(\{q_0, q_1\} ...$
+}
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0, Z_0, q_0] \\
+S & \rightarrow & [q_0, Z_0, q_1] 
+\end{eqnarray*}
+
+From $\delta(q_0, 1, Z_0) = \{(q_0, XZ_0)\}$
+
+\begin{eqnarray*}
+\left[q_0, Z_0, q_0\right] & \rightarrow 1[q_0, X, q_0][q_0, Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow 1[q_0, X, q_1][q_1, Z_0, q_0] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow 1[q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow 1[q_0, X, q_1][q_1, Z_0, q_1] 
+\end{eqnarray*}
+
+From $\delta(q_0, \epsilon, Z_0) = \{(q_0, \epsilon)\}$
+
+\begin{eqnarray*}
+\left[q_0, Z_0, q_0\right] & \rightarrow & \epsilon 
+\end{eqnarray*}
+
+We got
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0, Z_0, q_0] \\
+S & \rightarrow & [q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 1[q_0, X, q_0][q_0, Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 1[q_0, X, q_1][q_1, Z_0, q_0] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 1[q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 1[q_0, X, q_1][q_1, Z_0, q_1] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & \epsilon 
+\end{eqnarray*}
+
+From $\delta(q_0, 0, X) = \{(q_1, X)\}$ and $\delta(q_0, 1, X) = \{(q_0, XX)\}$
+
+\begin{eqnarray*}
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_1, X, q_1] \\
+\left[q_0, X, q_0\right] & \rightarrow & 1[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 1[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 1[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 1[q_0, X, q_1][q_1, X, q_0] 
+\end{eqnarray*}
+
+Currently, we have the following production rules
+
+\begin{eqnarray*}
+S & \rightarrow & [q_0, Z_0, q_0] \\
+S & \rightarrow & [q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 1[q_0, X, q_0][q_0, Z_0, q_0] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & 1[q_0, X, q_1][q_1, Z_0, q_0] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 1[q_0, X, q_0][q_0, Z_0, q_1] \\
+\left[q_0, Z_0, q_1\right] & \rightarrow & 1[q_0, X, q_1][q_1, Z_0, q_1] \\
+\left[q_0, Z_0, q_0\right] & \rightarrow & \epsilon \\
+\left[q_0, X, q_0\right] & \rightarrow & 0[q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 0[q_1, X, q_1] \\
+\left[q_0, X, q_0\right] & \rightarrow & 1[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_0\right] & \rightarrow & 1[q_0, X, q_1][q_1, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 1[q_0, X, q_0][q_0, X, q_0] \\
+\left[q_0, X, q_1\right] & \rightarrow & 1[q_0, X, q_1][q_1, X, q_0] 
+\end{eqnarray*}
+
+
